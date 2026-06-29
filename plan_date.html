@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Our Date 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blush: #F2B8C6;
+    --rose: #D4607A;
+    --deep: #2C1A2E;
+    --cream: #FDF6F0;
+    --warm: #F7E8DC;
+    --gold: #C9A96E;
+    --ink: #3A2A3C;
+    --muted: #9B8BA0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HERO HEADER ── */
+  .hero {
+    background: linear-gradient(150deg, #2C1A2E 0%, #4A2540 55%, #D4607A 100%);
+    padding: 2.5rem 1.5rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 1px solid rgba(242,184,198,0.12);
+    top: -180px; right: -180px;
+    pointer-events: none;
+  }
+  .hero-emoji { font-size: 2.8rem; display: block; margin-bottom: 0.75rem; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hero-to {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 0.2rem;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 5.5vw, 2.8rem);
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+  .hero-name em { color: var(--blush); font-style: italic; }
+  .hero-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ── FORM ── */
+  #form-screen {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.75rem 1.25rem 5rem;
+  }
+
+  /* STEP CARDS */
+  .step-card {
+    background: white;
+    border-radius: 24px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 20px rgba(44,26,46,0.06);
+    border: 1px solid rgba(212,96,122,0.08);
+  }
+
+  .step-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blush), var(--rose));
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--deep);
+  }
+
+  /* PILLS */
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .pill {
+    padding: 0.5rem 1.1rem;
+    border-radius: 50px;
+    border: 1.5px solid #E8D5DC;
+    background: white;
+    color: var(--muted);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'DM Sans', sans-serif;
+    user-select: none;
+  }
+  .pill:hover { border-color: var(--rose); color: var(--rose); }
+  .pill.active {
+    background: linear-gradient(135deg, var(--blush), var(--rose));
+    border-color: transparent;
+    color: white;
+    font-weight: 500;
+  }
+  .pill.pill-other { border-style: dashed; }
+  .pill.pill-other.active { border-style: solid; }
+
+  /* OTHER INPUT */
+  .other-input-wrap {
+    display: none;
+    margin-top: 0.75rem;
+    animation: slideDown 0.2s ease;
+  }
+  .other-input-wrap.show { display: block; }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+  .other-input {
+    width: 100%;
+    border: 1.5px solid var(--blush);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    background: #FDF6F0;
+    transition: border 0.2s;
+  }
+  .other-input:focus { border-color: var(--rose); }
+  .other-input::placeholder { color: var(--muted); }
+
+  /* TEMPAT NAME INPUT */
+  .tempat-name-wrap {
+    display: none;
+    margin-top: 0.75rem;
+    animation: slideDown 0.2s ease;
+  }
+  .tempat-name-wrap.show { display: block; }
+
+  .tempat-name-label {
+    font-size: 0.78rem;
+    color: var(--rose);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  /* GAME GRID */
+  .game-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .game-card {
+    border: 1.5px solid #E8D5DC;
+    border-radius: 16px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    background: white;
+  }
+  .game-card:hover { border-color: var(--rose); }
+  .game-card.active {
+    border-color: var(--rose);
+    background: linear-gradient(135deg, #FDF0F4, #FCEDF2);
+  }
+  .game-emoji { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+  .game-name { font-size: 0.85rem; color: var(--ink); font-weight: 500; }
+  .game-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* TOGGLE */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid #E8D5DC;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: border 0.18s;
+    user-select: none;
+  }
+  .toggle-wrap:hover { border-color: var(--rose); }
+  .toggle-wrap.active { border-color: var(--rose); background: #FDF0F4; }
+  .toggle-icon { font-size: 1.5rem; }
+  .toggle-text { flex: 1; }
+  .toggle-text strong { display: block; font-size: 0.95rem; color: var(--ink); }
+  .toggle-text span { font-size: 0.8rem; color: var(--muted); }
+  .toggle-switch {
+    width: 44px; height: 26px;
+    background: #E0D0E4;
+    border-radius: 13px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-wrap.active .toggle-switch { background: var(--rose); }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-wrap.active .toggle-switch::after { transform: translateX(18px); }
+
+  /* BAWA LIST */
+  .bawa-list {
+    background: var(--warm);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-top: 0.75rem;
+  }
+  .bawa-list-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem;
+  }
+  .bawa-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+    padding: 0.2rem 0;
+  }
+  .bawa-item::before { content: '✦'; color: var(--gold); font-size: 0.65rem; }
+
+  /* SUBMIT */
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--rose), #8B3252);
+    color: white;
+    border: none;
+    padding: 1.1rem;
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(212,96,122,0.35);
+    letter-spacing: 0.03em;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,96,122,0.45); }
+
+  /* ── RESULT ── */
+  #result-screen {
+    display: none;
+    padding: 2rem 1.25rem 4rem;
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .result-header { padding: 2rem 0 1.5rem; }
+  .result-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--deep);
+    margin-bottom: 0.4rem;
+  }
+  .result-sub { font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--muted); }
+
+  /* CARD */
+  #reservation-card {
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 8px 50px rgba(44,26,46,0.15);
+    margin: 1.5rem 0;
+    text-align: left;
+  }
+
+  .card-top {
+    background: linear-gradient(135deg, #2C1A2E 0%, #4A2540 50%, #D4607A 100%);
+    padding: 2.5rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-top::before {
+    content: '♡';
+    position: absolute;
+    right: 1.5rem; top: 1rem;
+    font-size: 6rem;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+  }
+  .card-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .card-names {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+  }
+  .card-names em { color: var(--blush); }
+  .card-date-text {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  .wave-div { height: 40px; background: linear-gradient(135deg,#2C1A2E 0%,#4A2540 50%,#D4607A 100%); position: relative; margin-bottom: -1px; }
+  .wave-div svg { position: absolute; bottom: 0; left: 0; width: 100%; }
+
+  .card-body { padding: 1.75rem 2rem; }
+
+  .card-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .card-detail { flex: 1; min-width: 120px; }
+  .detail-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .detail-value { font-size: 0.95rem; color: var(--deep); font-weight: 500; }
+  .detail-value.fancy { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+
+  .card-divider { height: 1px; background: linear-gradient(to right, transparent, #E8D5DC, transparent); margin: 1.25rem 0; }
+
+  .card-bawa { background: var(--warm); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .bawa-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .bawa-tag { background: white; border: 1px solid #E8D5DC; border-radius: 50px; padding: 0.25rem 0.75rem; font-size: 0.78rem; color: var(--ink); }
+
+  .tiktok-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, #010101, #1a1a2e); color: white; border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.78rem; font-weight: 500; }
+
+  .card-footer { background: var(--deep); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .footer-left { font-family: 'Caveat', cursive; color: var(--blush); font-size: 1rem; }
+  .footer-hearts { color: var(--rose); font-size: 1.2rem; letter-spacing: 0.15em; }
+
+  .btn-download {
+    background: linear-gradient(135deg, var(--rose), #8B3252);
+    color: white; border: none; padding: 1rem 2rem; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; width: 100%; margin-bottom: 0.75rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(212,96,122,0.35);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,96,122,0.45); }
+
+  .btn-reset {
+    background: none; border: 1.5px solid #E8D5DC; color: var(--muted);
+    padding: 0.85rem 2rem; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    cursor: pointer; width: 100%;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-reset:hover { border-color: var(--rose); color: var(--rose); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-emoji">💌</span>
+  <p class="hero-to">khusus buat</p>
+  <h1 class="hero-name"><em>Pitri Ariyani</em></h1>
+  <p class="hero-sub">yuk kita rencanain date kita bareng ✨</p>
+</div>
+
+<!-- FORM -->
+<div id="form-screen">
+
+  <!-- STEP 1: OUTFIT -->
+  <div class="step-card">
+    <div class="step-label">
+      <div class="step-num">1</div>
+      <span class="step-title">Tema Outfit Kita 👗</span>
+    </div>
+    <div class="pill-group">
+      <div class="pill" onclick="selectPill(this,'outfit')">👫 Couple Matching</div>
+      <div class="pill" onclick="selectPill(this,'outfit')">🎨 Warna Senada</div>
+      <div class="pill" onclick="selectPill(this,'outfit')">👕 Casual Santai</div>
+      <div class="pill" onclick="selectPill(this,'outfit')">✨ Semi-Formal</div>
+      <div class="pill" onclick="selectPill(this,'outfit')">🌿 Aesthetic Thrift</div>
+      <div class="pill" onclick="selectPill(this,'outfit')">🖤 All Black</div>
+      <div class="pill pill-other" onclick="selectPillOther(this,'outfit','outfit-other-wrap')">✏️ Lainnya</div>
+    </div>
+    <div class="other-input-wrap" id="outfit-other-wrap">
+      <input class="other-input" id="outfit-other-input" type="text" placeholder="tulis tema outfit kita..." oninput="setOtherValue('outfit','outfit-other-input')">
+    </div>
+  </div>
+
+  <!-- STEP 2: TEMPAT -->
+  <div class="step-card">
+    <div class="step-label">
+      <div class="step-num">2</div>
+      <span class="step-title">Mau ke Mana? 📍</span>
+    </div>
+    <div class="pill-group">
+      <div class="pill" onclick="selectTempatPill(this,'🛍️ Mall')">🛍️ Mall</div>
+      <div class="pill" onclick="selectTempatPill(this,'🎬 Bioskop')">🎬 Bioskop</div>
+      <div class="pill" onclick="selectTempatPill(this,'🍽️ Makan Bareng')">🍽️ Makan Bareng</div>
+      <div class="pill" onclick="selectTempatPill(this,'☕ Café')">☕ Café</div>
+      <div class="pill" onclick="selectTempatPill(this,'🌿 Alam / Outdoor')">🌿 Alam / Outdoor</div>
+      <div class="pill" onclick="selectTempatPill(this,'🧺 Piknik & Masak')">🧺 Piknik & Masak</div>
+      <div class="pill pill-other" onclick="selectTempatPill(this,'lainnya')">✏️ Lainnya</div>
+    </div>
+
+    <!-- Nama tempat spesifik -->
+    <div class="tempat-name-wrap" id="tempat-name-wrap">
+      <div class="tempat-name-label" id="tempat-name-label">Nama tempatnya?</div>
+      <input class="other-input" id="tempat-name-input" type="text" placeholder="contoh: Paris Van Java, Trans Studio..." oninput="updateTempatName()">
+    </div>
+
+    <!-- Bawa apa -->
+    <div class="bawa-list" id="bawa-list" style="display:none">
+      <div class="bawa-list-title">Yang perlu dibawa ✦</div>
+      <div id="bawa-items"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: OBROLAN -->
+  <div class="step-card">
+    <div class="step-label">
+      <div class="step-num">3</div>
+      <span class="step-title">Vibes Obrolan Kita 💬</span>
+    </div>
+    <div class="pill-group">
+      <div class="pill" onclick="selectPill(this,'obrolan')">😂 Fun & Ngalir</div>
+      <div class="pill" onclick="selectPill(this,'obrolan')">🌌 Deep & Meaningful</div>
+      <div class="pill" onclick="selectPill(this,'obrolan')">☁️ Santai Aja</div>
+      <div class="pill" onclick="selectPill(this,'obrolan')">🎲 Random & Seru</div>
+      <div class="pill" onclick="selectPill(this,'obrolan')">💭 Cerita Masa Depan</div>
+      <div class="pill pill-other" onclick="selectPillOther(this,'obrolan','obrolan-other-wrap')">✏️ Lainnya</div>
+    </div>
+    <div class="other-input-wrap" id="obrolan-other-wrap">
+      <input class="other-input" id="obrolan-other-input" type="text" placeholder="tulis vibes obrolan kita..." oninput="setOtherValue('obrolan','obrolan-other-input')">
+    </div>
+  </div>
+
+  <!-- STEP 4: GAMES -->
+  <div class="step-card">
+    <div class="step-label">
+      <div class="step-num">4</div>
+      <span class="step-title">Main Apa? 🎮</span>
+    </div>
+    <div class="game-grid">
+      <div class="game-card" onclick="toggleGame(this,'lukis')">
+        <span class="game-emoji">🎨</span>
+        <div class="game-name">Lukis Bareng</div>
+        <div class="game-desc">kanvas & cat udah ada</div>
+      </div>
+      <div class="game-card" onclick="toggleGame(this,'clay')">
+        <span class="game-emoji">🏺</span>
+        <div class="game-name">Clay Karakter</div>
+        <div class="game-desc">bikin karakter bareng</div>
+      </div>
+      <div class="game-card" onclick="toggleGame(this,'tebak')">
+        <span class="game-emoji">🃏</span>
+        <div class="game-name">This or That</div>
+        <div class="game-desc">tebak pilihan pasangan</div>
+      </div>
+      <div class="game-card" onclick="toggleGame(this,'ai')">
+        <span class="game-emoji">🤖</span>
+        <div class="game-name">Rekomendasi AI</div>
+        <div class="game-desc">biar AI yang pilih</div>
+      </div>
+    </div>
+    <!-- Game lainnya -->
+    <div style="margin-top:0.75rem;">
+      <div class="pill pill-other" id="game-other-pill" onclick="toggleGameOther()" style="display:inline-block">✏️ Game Lainnya</div>
+    </div>
+    <div class="other-input-wrap" id="game-other-wrap">
+      <input class="other-input" id="game-other-input" type="text" placeholder="tulis game yang mau dimainkan..." oninput="updateGameOther()">
+    </div>
+  </div>
+
+  <!-- STEP 5: TIKTOK -->
+  <div class="step-card">
+    <div class="step-label">
+      <div class="step-num">5</div>
+      <span class="step-title">Buat Konten TikTok? 📱</span>
+    </div>
+    <div class="toggle-wrap" id="tiktok-toggle" onclick="toggleTiktok()">
+      <span class="toggle-icon">🎵</span>
+      <div class="toggle-text">
+        <strong>Dokumentasi Date</strong>
+        <span>Buat konten TikTok bareng hari ini</span>
+      </div>
+      <div class="toggle-switch"></div>
+    </div>
+  </div>
+
+  <button class="btn-submit" onclick="generateCard()">Lihat Kartu Date Kita 💌</button>
+</div>
+
+<!-- RESULT -->
+<div id="result-screen">
+  <div class="result-header">
+    <h2>Date Plan Siap! 🎉</h2>
+    <p class="result-sub">simpan kartunya ya biar nggak lupa 💕</p>
+  </div>
+
+  <div id="reservation-card">
+    <div class="card-top">
+      <div class="card-badge">✦ Kartu Reservasi Date ✦</div>
+      <div class="card-names">Pitri <em>&</em> <span id="card-partner-name">kamu</span></div>
+      <span class="card-date-text" id="card-date">–</span>
+    </div>
+    <div class="wave-div">
+      <svg viewBox="0 0 400 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,20 C100,40 300,0 400,20 L400,40 L0,40 Z" fill="white"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-row">
+        <div class="card-detail">
+          <div class="detail-label">👗 Outfit</div>
+          <div class="detail-value fancy" id="res-outfit">–</div>
+        </div>
+        <div class="card-detail">
+          <div class="detail-label">📍 Destinasi</div>
+          <div class="detail-value fancy" id="res-tempat">–</div>
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="card-detail">
+          <div class="detail-label">💬 Vibes Obrolan</div>
+          <div class="detail-value" id="res-obrolan">–</div>
+        </div>
+        <div class="card-detail">
+          <div class="detail-label">🎮 Game</div>
+          <div class="detail-value" id="res-game">–</div>
+        </div>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-bawa" id="res-bawa-wrap" style="display:none">
+        <div class="detail-label">🎒 Yang Dibawa</div>
+        <div class="bawa-grid" id="res-bawa"></div>
+      </div>
+      <div class="card-row" id="res-tiktok-row" style="display:none">
+        <div class="card-detail">
+          <div class="detail-label">📱 Konten</div>
+          <div class="detail-value"><span class="tiktok-badge"><span>♪</span> TikTok Mode ON 🎬</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-left">Pitri & aku 💕</div>
+      <div class="footer-hearts">♥ ♥ ♥</div>
+    </div>
+  </div>
+
+  <button class="btn-download" onclick="downloadCard()">⬇️ Unduh Kartu Date</button>
+  <button class="btn-reset" onclick="resetAll()">Isi Ulang dari Awal</button>
+</div>
+
+<script>
+  const state = {
+    outfit: '',
+    tempatKategori: '',
+    tempatNama: '',
+    obrolan: '',
+    games: [],
+    gameOther: '',
+    gameOtherActive: false,
+    tiktok: false
+  };
+
+  const bawaMap = {
+    '🛍️ Mall':        ['dompet & kartu', 'masker', 'earphone', 'outfit cakep'],
+    '🎬 Bioskop':     ['popcorn budget', 'jaket (dingin!)', 'minuman sendiri', 'tissue'],
+    '🍽️ Makan Bareng':['nafsu makan 😄', 'rekomendasi menu', 'kamera buat foto makanan'],
+    '☕ Café':         ['kamera/hp buat foto', 'playlist lagu', 'buku / jurnal'],
+    '🌿 Alam / Outdoor':['sunscreen', 'botol minum', 'sneakers nyaman', 'kamera', 'camilan'],
+    '🧺 Piknik & Masak':['tikar piknik', 'bahan masakan', 'alat masak portable', 'tisu basah', 'kantong sampah', 'camilan']
+  };
+
+  // ── OUTFIT & OBROLAN (simple pill + other) ──
+  function selectPill(el, key) {
+    const group = el.parentElement;
+    group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    state[key] = el.textContent.trim();
+    // hide any "other" input for this key
+    const wrapId = key + '-other-wrap';
+    const wrap = document.getElementById(wrapId);
+    if (wrap) wrap.classList.remove('show');
+  }
+
+  function selectPillOther(el, key, wrapId) {
+    const group = el.parentElement;
+    group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    const wrap = document.getElementById(wrapId);
+    wrap.classList.add('show');
+    // clear state until they type
+    state[key] = '';
+    document.getElementById(key + '-other-input').focus();
+  }
+
+  function setOtherValue(key, inputId) {
+    state[key] = document.getElementById(inputId).value.trim();
+  }
+
+  // ── TEMPAT ──
+  function selectTempatPill(el, kategori) {
+    const group = el.parentElement;
+    group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    state.tempatKategori = kategori;
+    state.tempatNama = '';
+
+    const nameWrap = document.getElementById('tempat-name-wrap');
+    const nameInput = document.getElementById('tempat-name-input');
+    const nameLabel = document.getElementById('tempat-name-label');
+
+    // Always show name input
+    nameWrap.classList.add('show');
+    nameInput.value = '';
+
+    if (kategori === 'lainnya') {
+      nameLabel.textContent = 'Mau ke mana?';
+      nameInput.placeholder = 'tulis nama / jenis tempatnya...';
+    } else {
+      nameLabel.textContent = 'Nama spesifik tempatnya? (opsional)';
+      nameInput.placeholder = `contoh: nama ${kategori.replace(/[^\w\s]/gi,'').trim()} yang dituju...`;
+    }
+
+    nameInput.focus();
+    updateBawa(kategori);
+  }
+
+  function updateTempatName() {
+    state.tempatNama = document.getElementById('tempat-name-input').value.trim();
+  }
+
+  function getTempatDisplay() {
+    if (state.tempatKategori === 'lainnya') {
+      return state.tempatNama || 'Lainnya';
+    }
+    if (state.tempatNama) {
+      return state.tempatKategori + ' – ' + state.tempatNama;
+    }
+    return state.tempatKategori;
+  }
+
+  function updateBawa(kategori) {
+    const items = bawaMap[kategori];
+    const wrap = document.getElementById('bawa-list');
+    const cont = document.getElementById('bawa-items');
+    if (!items) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    cont.innerHTML = items.map(i => `<div class="bawa-item">${i}</div>`).join('');
+  }
+
+  // ── GAMES ──
+  const gameNames = {
+    lukis: '🎨 Lukis Bareng',
+    clay:  '🏺 Clay Karakter',
+    tebak: '🃏 This or That',
+    ai:    '🤖 Rekomendasi AI'
+  };
+
+  function toggleGame(el, key) {
+    el.classList.toggle('active');
+    if (el.classList.contains('active')) {
+      if (!state.games.includes(key)) state.games.push(key);
+    } else {
+      state.games = state.games.filter(g => g !== key);
+    }
+  }
+
+  function toggleGameOther() {
+    state.gameOtherActive = !state.gameOtherActive;
+    const pill = document.getElementById('game-other-pill');
+    const wrap = document.getElementById('game-other-wrap');
+    pill.classList.toggle('active', state.gameOtherActive);
+    wrap.classList.toggle('show', state.gameOtherActive);
+    if (state.gameOtherActive) document.getElementById('game-other-input').focus();
+    else { state.gameOther = ''; document.getElementById('game-other-input').value = ''; }
+  }
+
+  function updateGameOther() {
+    state.gameOther = document.getElementById('game-other-input').value.trim();
+  }
+
+  function getGamesDisplay() {
+    const list = state.games.map(g => gameNames[g]);
+    if (state.gameOtherActive && state.gameOther) list.push('✏️ ' + state.gameOther);
+    return list.length ? list.join(', ') : '– belum dipilih';
+  }
+
+  // ── TIKTOK ──
+  function toggleTiktok() {
+    state.tiktok = !state.tiktok;
+    document.getElementById('tiktok-toggle').classList.toggle('active', state.tiktok);
+  }
+
+  // ── GENERATE CARD ──
+  function generateCard() {
+    if (!state.outfit) { alert('Pilih dulu tema outfit nya ya 💕'); return; }
+    if (!state.tempatKategori) { alert('Pilih dulu mau ke mana nya 💕'); return; }
+    if (state.tempatKategori === 'lainnya' && !state.tempatNama) { alert('Tulis dulu nama tempatnya 💕'); return; }
+    if (!state.obrolan) { alert('Pilih dulu vibes obrolan nya 💕'); return; }
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    document.getElementById('card-date').textContent = dateStr;
+    document.getElementById('res-outfit').textContent = state.outfit;
+    document.getElementById('res-tempat').textContent = getTempatDisplay();
+    document.getElementById('res-obrolan').textContent = state.obrolan;
+    document.getElementById('res-game').textContent = getGamesDisplay();
+
+    // bawa
+    const bawaItems = bawaMap[state.tempatKategori];
+    const bawaWrap = document.getElementById('res-bawa-wrap');
+    if (bawaItems) {
+      bawaWrap.style.display = 'block';
+      document.getElementById('res-bawa').innerHTML = bawaItems.map(i => `<span class="bawa-tag">${i}</span>`).join('');
+    } else {
+      bawaWrap.style.display = 'none';
+    }
+
+    document.getElementById('res-tiktok-row').style.display = state.tiktok ? 'flex' : 'none';
+
+    document.getElementById('form-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  // ── DOWNLOAD ──
+  function downloadCard() {
+    const tempatDisplay = getTempatDisplay();
+    const gamesDisplay = getGamesDisplay();
+    const bawaItems = bawaMap[state.tempatKategori];
+
+    const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date Plan – Pitri Ariyani 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#FDF6F0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;}
+.card{max-width:500px;width:100%;background:white;border-radius:28px;overflow:hidden;box-shadow:0 8px 50px rgba(44,26,46,0.15);}
+.card-top{background:linear-gradient(135deg,#2C1A2E 0%,#4A2540 50%,#D4607A 100%);padding:2.5rem 2rem 3rem;position:relative;overflow:hidden;}
+.card-top::before{content:'♡';position:absolute;right:1.5rem;top:1rem;font-size:6rem;color:rgba(255,255,255,0.06);line-height:1;}
+.card-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:50px;padding:.3rem .9rem;font-size:.72rem;color:rgba(255,255,255,.8);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
+.card-names{font-family:'Playfair Display',serif;font-size:2rem;color:white;line-height:1.1;margin-bottom:.25rem;}
+.card-names em{color:#F2B8C6;}
+.card-date{font-family:'Caveat',cursive;font-size:1rem;color:rgba(255,255,255,.6);margin-top:.5rem;display:block;}
+.wave-div{height:40px;background:linear-gradient(135deg,#2C1A2E 0%,#4A2540 50%,#D4607A 100%);position:relative;margin-bottom:-1px;}
+.wave-div svg{position:absolute;bottom:0;left:0;width:100%;}
+.card-body{padding:1.75rem 2rem;}
+.card-row{display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.card-detail{flex:1;min-width:120px;}
+.detail-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#9B8BA0;margin-bottom:.3rem;}
+.detail-value{font-size:.95rem;color:#2C1A2E;font-weight:500;}
+.detail-value.fancy{font-family:'Playfair Display',serif;font-size:1.1rem;}
+.card-divider{height:1px;background:linear-gradient(to right,transparent,#E8D5DC,transparent);margin:1.25rem 0;}
+.card-bawa{background:#F7E8DC;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.5rem;}
+.bawa-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem;}
+.bawa-tag{background:white;border:1px solid #E8D5DC;border-radius:50px;padding:.25rem .75rem;font-size:.78rem;color:#3A2A3C;}
+.tiktok-badge{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#010101,#1a1a2e);color:white;border-radius:8px;padding:.35rem .8rem;font-size:.78rem;font-weight:500;}
+.card-footer{background:#2C1A2E;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.footer-left{font-family:'Caveat',cursive;color:#F2B8C6;font-size:1rem;}
+.footer-hearts{color:#D4607A;font-size:1.2rem;letter-spacing:.15em;}
+</style></head><body>
+<div class="card">
+  <div class="card-top">
+    <div class="card-badge">✦ Kartu Reservasi Date ✦</div>
+    <div class="card-names">Pitri <em>&</em> aku</div>
+    <span class="card-date">${new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</span>
+  </div>
+  <div class="wave-div"><svg viewBox="0 0 400 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C100,40 300,0 400,20 L400,40 L0,40 Z" fill="white"/></svg></div>
+  <div class="card-body">
+    <div class="card-row">
+      <div class="card-detail"><div class="detail-label">👗 Outfit</div><div class="detail-value fancy">${state.outfit}</div></div>
+      <div class="card-detail"><div class="detail-label">📍 Destinasi</div><div class="detail-value fancy">${tempatDisplay}</div></div>
+    </div>
+    <div class="card-row">
+      <div class="card-detail"><div class="detail-label">💬 Vibes Obrolan</div><div class="detail-value">${state.obrolan}</div></div>
+      <div class="card-detail"><div class="detail-label">🎮 Game</div><div class="detail-value">${gamesDisplay}</div></div>
+    </div>
+    <div class="card-divider"></div>
+    ${bawaItems ? `<div class="card-bawa"><div class="detail-label">🎒 Yang Dibawa</div><div class="bawa-grid">${bawaItems.map(i=>`<span class="bawa-tag">${i}</span>`).join('')}</div></div>` : ''}
+    ${state.tiktok ? `<div class="card-row"><div class="card-detail"><div class="detail-label">📱 Konten</div><div class="detail-value"><span class="tiktok-badge"><span>♪</span> TikTok Mode ON 🎬</span></div></div></div>` : ''}
+  </div>
+  <div class="card-footer">
+    <div class="footer-left">Pitri & aku 💕</div>
+    <div class="footer-hearts">♥ ♥ ♥</div>
+  </div>
+</div>
+</body></html>`;
+
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'date-plan-pitri.html';
+    a.click();
+  }
+
+  // ── RESET ──
+  function resetAll() {
+    Object.assign(state, { outfit:'', tempatKategori:'', tempatNama:'', obrolan:'', games:[], gameOther:'', gameOtherActive:false, tiktok:false });
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.game-card').forEach(g => g.classList.remove('active'));
+    document.querySelectorAll('.other-input-wrap').forEach(w => w.classList.remove('show'));
+    document.querySelectorAll('.other-input').forEach(i => i.value = '');
+    document.getElementById('tempat-name-wrap').classList.remove('show');
+    document.getElementById('tempat-name-input').value = '';
+    document.getElementById('bawa-list').style.display = 'none';
+    document.getElementById('tiktok-toggle').classList.remove('active');
+    document.getElementById('game-other-pill').classList.remove('active');
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('form-screen').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
